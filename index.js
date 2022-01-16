@@ -25,7 +25,7 @@ router.post("/register", (req, res) => {
 });
 
 //SEND POST API WITH NOTIFICATION DATA
-router.post("/notifications", async (req, res) => {
+router.post("/notification", async (req, res) => {
   try {
     const { title, body, imageUrl } = req.body;
     await admin.messaging().sendMulticast({
