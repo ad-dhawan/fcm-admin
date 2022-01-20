@@ -1,45 +1,32 @@
-const Express = require("express");
-const bodyParser = require("body-parser");
+const express = require("express");
+const app = express();
 const admin = require("firebase-admin");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 
+//ROUTE IMPORTS
+const notificationRoute = require("./src/routes/notification");
+
+//CONFIGURATION
+dotenv.config();
 const serviceAccount = require("./firebase.json");
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-const tokens = [];
+//DB CONNECT
+mongoose.connect(process.env.DB_CONNECT, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  // useCreateIndex: true,
+})
+.then(() => console.log("Database connected!"))
+.catch((err) => console.log(err));
 
-const app = new Express();
-const router = Express.Router();
+//MIDDLEWARE
+app.use(express.json());
 
-app.use(bodyParser.json());
-app.use("/", router);
+//Route Middleware
+app.use("/notification", notificationRoute);
 
 app.listen(3000, () => console.log("Server is running"));
-
-//REGISTER WITH DEVICE TOKEN
-router.post("/register", (req, res) => {
-  tokens.push(req.body.token);
-  res.status(200).json({ message: "Successfully registered FCM Token!" });
-});
-
-//SEND POST API WITH NOTIFICATION DATA
-router.post("/notification", async (req, res) => {
-  try {
-    const { title, body, imageUrl } = req.body;
-    await admin.messaging().sendMulticast({
-      tokens,
-      notification: {
-        title,
-        body,
-        imageUrl,
-      },
-    });
-    res.status(200).json({ message: "Successfully sent notifications!" });
-  } catch (err) {
-    res
-      .status(err.status || 500)
-      .json({ message: err.message || "Something went wrong!" });
-  }
-});
