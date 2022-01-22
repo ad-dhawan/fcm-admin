@@ -1,18 +1,22 @@
 const router = require("express").Router();
-const Token = require("../model/token");
+const TokenSchema = require("../model/token");
 
 //REGISTER WITH DEVICE TOKEN
 router.post("/register", async (req, res) => {
-    const token = new Token({
-        tokens: req.body.token
-    })
-
     try{
-        token.save(function (err, result) {
-            if(err) console.log('DATABASE SAVE ERROR: ', err);
-            else console.log(result);
+        TokenSchema.updateOne({}, {
+            $addToSet : {token: [req.body.token]}
+        }, {
+          upsert: true
+        }, function(err, result){
+            if(err) {
+              console.log('DATABASE UPDATE ERROR: ', err);
+              res.status(502).json({ token: req.body.token, message: "Couldn't register FCM Token" });
+            } else {
+              console.log('DATABASE UPDATED: ', result);
+              res.status(200).json({ token: req.body.token, message: "Successfully registered FCM Token!" });
+            }
         })
-        res.status(200).json({ token: req.body.token, message: "Successfully registered FCM Token!" });
     } catch (err) {
         console.log("REGISTRATION ERROR: ", err);
     }
