@@ -41,6 +41,21 @@ router.post("/send", async (req, res) => {
         .status(err.status || 500)
         .json({ message: err.message || "Something went wrong!" });
     }
-  });
+});
+
+//GET ALL TOKENS
+router.get("/get_tokens", async (req, res) => {
+  try {
+    TokenSchema.find({}, function (err, tokens){
+      if(err) res.status(404).json({ status: 404, message: "Tokens not found", tokens: tokens[0].token });
+      else {
+        // console.log(tokens[0].token);
+        res.status(200).json({ status: 200, message: "Success", tokens: tokens[0].token });
+      }
+    })
+  } catch(err) {
+    res.status(500).json({ status: 500, message: "Internal Server Error" });
+  }
+})
 
 module.exports = router;
