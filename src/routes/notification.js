@@ -1,3 +1,4 @@
+const admin = require("firebase-admin");
 const router = require("express").Router();
 const TokenSchema = require("../model/token");
 
@@ -25,9 +26,9 @@ router.post("/register", async (req, res) => {
 //SEND POST API WITH NOTIFICATION DATA
 router.post("/send", async (req, res) => {
     try {
-      const { title, body, imageUrl } = req.body;
+      const { title, body, imageUrl, tokens } = req.body;
       await admin.messaging().sendMulticast({
-        Token,
+        tokens,
         notification: {
           title,
           body,

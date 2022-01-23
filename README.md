@@ -24,7 +24,7 @@
 
 ## `Endpoints`
 #### `http://localhost:3000/notification/register` : This will register FCM Token generated from the device. NOTE - Every device has unique FCM Token
-#### `http://localhost:3000/notification/send` : This post API takes three parameters which are title, body, imageUrl to send notification associated with the token array.
+#### `http://localhost:3000/notification/send` : This post API takes four parameters which are title, body, imageUrl, tokens to send notification.
 
 <br />
 
