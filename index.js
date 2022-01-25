@@ -4,6 +4,8 @@ const admin = require("firebase-admin");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
+const port = process.env.PORT || 3000
+
 //ROUTE IMPORTS
 const notificationRoute = require("./src/routes/notification");
 
@@ -29,4 +31,4 @@ app.use(express.json());
 //Route Middleware
 app.use("/notification", notificationRoute);
 
-app.listen(3000, () => console.log("Server is running"));
+app.listen(port, () => console.log(`Server is running on ${port}`));
