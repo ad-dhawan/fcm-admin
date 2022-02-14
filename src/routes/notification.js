@@ -1,5 +1,7 @@
 const admin = require("firebase-admin");
 const router = require("express").Router();
+const schedule = require('node-schedule');
+
 const TokenSchema = require("../model/token");
 
 //REGISTER WITH DEVICE TOKEN
@@ -23,7 +25,7 @@ router.post("/register", async (req, res) => {
     }
 });
 
-//SEND POST API WITH NOTIFICATION DATA
+//SEND NOTIFICATION
 router.post("/send", async (req, res) => {
     try {
       const { title, body, imageUrl, tokens } = req.body;
@@ -42,6 +44,31 @@ router.post("/send", async (req, res) => {
         .json({ message: err.message || "Something went wrong!" });
     }
 });
+
+//SEND SCHEDULED NOTIFICATION
+router.post("/scheduled_notification", (req, res) => { 
+  try{
+    const {title, body, imageUrl, tokens, date} = req.body;
+    
+    schedule.scheduleJob(date, async function(){
+      await admin.messaging().sendMulticast({
+        tokens,
+        notification: {
+          title,
+          body,
+          imageUrl
+        }
+      });
+    });
+
+    res.status(200).json({status: 200, message: `Notification will trigger at ${date}`})
+  } catch (err) {
+    res
+      .status(err.status || 500)
+      .json({ message: err.message || "Something went wrong!" });
+  }
+
+})
 
 //GET ALL TOKENS
 router.get("/get_tokens", async (req, res) => {
