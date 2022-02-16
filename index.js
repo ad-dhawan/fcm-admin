@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 //ROUTE IMPORTS
 const notificationRoute = require("./src/routes/notification");
+const todoRoute = require("./src/routes/todo");
 
 //CONFIGURATION
 dotenv.config();
@@ -39,6 +40,7 @@ app.use(express.json());
 
 //Route Middleware
 app.use("/notification", notificationRoute);
+app.use("/todo", todoRoute);
 
 app.listen(process.env.PORT || 3000, function(){
   console.log(`Server listening on port ${this.address().port} in ${app.settings.env} mode`);
