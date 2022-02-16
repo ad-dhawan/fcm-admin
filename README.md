@@ -1,5 +1,6 @@
 # FCM ADMIN
 #### APIs to send Push Notifications using Firebase, NodeJS, ExpressJS
+##### Additionally Todo APIs for a todo application
 
 <br />
 
@@ -27,6 +28,14 @@
 #### `/notification/send` : This post API takes four parameters which are title, body, imageUrl, tokens to send notification.
 #### `/notification/get_tokens` : This get API returns all the tokens stored in the database.
 #### `/notification/scheduled_notification` : This API takes same parameters as /notification/send with one additional parameter 'date'. It takes UNIX or ISO time formats.
+
+<br />
+
+##### `/todo/create`
+##### `/todo/get_all`
+##### `/todo/update/:id`
+##### `/todo/get/:type`
+##### `/todo/delete/:id`
 
 <br />
 
