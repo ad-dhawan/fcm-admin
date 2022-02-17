@@ -36,6 +36,11 @@
 ##### `/todo/update/:id`
 ##### `/todo/get/:type`
 ##### `/todo/delete/:id`
+##### `/todo/edit/:id`
+##### `/todo/create_note`
+##### `/todo/get_notes`
+##### `/todo/delete_note/:id`
+##### `/todo/edit_note/:id`
 
 <br />
 

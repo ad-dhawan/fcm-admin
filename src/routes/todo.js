@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const TodoSchema = require('../model/todo');
+const NoteSchema = require('../model/note');
 
 /** CREATE TODO*/
 router.post("/create", async (req, res) => {
@@ -60,6 +61,66 @@ router.delete('/delete/:id', async (req, res) => {
             if(err) res.status(404).json({error: err.toString()});
             else res.status(200).json(count)
         })
+    } catch(err) {
+        res.status(500).json({ status: 500, message: "Internal Server Error", error: err.toString() });
+    }
+})
+
+/** EDIT TODO */
+router.put('/edit/:id', async (req, res) => {
+    try{
+        const todo = await TodoSchema.findOne({ _id: req.params.id })
+        await todo.updateOne({ $set : { todo: req.body.todo } })
+        res.status(200).json({message: 'updated todo', todo: todo})
+    } catch(err) {
+        res.status(500).json({ status: 500, message: "Internal Server Error", error: err.toString() });
+    }
+})
+
+/** CREATE NOTE */
+router.post('/create_note', async(req, res) => {
+    const note = new NoteSchema({
+        note: req.body.note
+    });
+
+    try{
+        const savedNote = await note.save();
+        res.status(200).json({message: "Note added", note: savedNote})
+    } catch(err) {
+        res.status(500).json({ status: 500, message: "Internal Server Error", error: err.toString() });
+    }
+});
+
+/** GET ALL NOTES */
+router.get('/get_notes', async (req, res) => {
+    try{
+        NoteSchema.find({}, function(err, note){
+            if(err) res.status(404).json({error: err});
+            else res.status(200).json(note)
+        })
+    } catch(err){
+        res.status(500).json({ status: 500, message: "Internal Server Error", error: err.toString() });
+    }
+})
+
+/** DELETE NOTE */
+router.delete('/delete_note/:id', async (req, res) => {
+    try{
+        NoteSchema.deleteOne({ _id: req.params.id }, function(err, count){
+            if(err) res.status(404).json({error: err.toString()});
+            else res.status(200).json(count)
+        })
+    } catch(err) {
+        res.status(500).json({ status: 500, message: "Internal Server Error", error: err.toString() });
+    }
+})
+
+/** EDIT NOTE */
+router.put('/edit_note/:id', async (req, res) => {
+    try{
+        const note = await NoteSchema.findOne({ _id: req.params.id })
+        await note.updateOne({ $set : { note: req.body.note } })
+        res.status(200).json({message: 'updated note', note: note})
     } catch(err) {
         res.status(500).json({ status: 500, message: "Internal Server Error", error: err.toString() });
     }
