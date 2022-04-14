@@ -36,6 +36,12 @@ router.post("/send", async (req, res) => {
           body,
           imageUrl,
         },
+        android: {
+          notification: {
+            sound: "file.mp3",
+            channel_id: "dooby_channel"
+          }
+        }
       });
       res.status(200).json({ status: 200, message: "Successfully sent notifications!" });
     } catch (err) {
